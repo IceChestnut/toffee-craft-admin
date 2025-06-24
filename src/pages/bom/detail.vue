@@ -7,27 +7,14 @@
     <view class="bom-card">
       <view class="form-group">
         <text class="form-label">配方名称</text>
-        <input
-          v-model="bom.name"
-          class="form-input"
-          placeholder="请输入配方名称"
-        />
+        <input v-model="bom.name" class="form-input" placeholder="请输入配方名称" />
       </view>
 
       <text class="section-title">材料列表</text>
       <view class="materials-container">
         <view class="material-item" v-for="(material, index) in bom.materials" :key="index">
-          <input
-            v-model="material.name"
-            class="form-input material-input"
-            placeholder="材料名称"
-          />
-          <input
-            v-model="material.ratio"
-            class="form-input ratio-input"
-            placeholder="克数(g)"
-            type="number"
-          />
+          <input v-model="material.name" class="form-input material-input" placeholder="材料名称" <uni-number-box
+            v-model="material.ratio" type="number" />
           <text class="unit-text">g</text>
           <button class="delete-btn" @click="removeMaterial(index)">删除</button>
         </view>
@@ -124,7 +111,7 @@ onLoad(async (options) => {
   background-color: white;
   border-radius: 16rpx;
   padding: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   margin-bottom: 30rpx;
 }
 
@@ -170,10 +157,6 @@ onLoad(async (options) => {
 
 .material-input {
   flex: 2;
-}
-
-.ratio-input {
-  flex: 1;
 }
 
 .add-btn {
