@@ -1,16 +1,82 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	}
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/bom/list",
+      "style": {
+        "navigationBarTitleText": "配方列表"
+      }
+    },
+    {
+      "path": "pages/bom/detail",
+      "style": {
+        "navigationBarTitleText": "配方详情"
+      }
+    },
+    {
+      "path": "pages/purchase/list",
+      "style": {
+        "navigationBarTitleText": "采购列表"
+      }
+    },
+    {
+      "path": "pages/purchase/detail",
+      "style": {
+        "navigationBarTitleText": "采购详情"
+      }
+    },
+    {
+      "path": "pages/sales/list",
+      "style": {
+        "navigationBarTitleText": "销售列表"
+      }
+    },
+    {
+      "path": "pages/sales/detail",
+      "style": {
+        "navigationBarTitleText": "销售详情"
+      }
+    },
+    {
+      "path": "pages/manufacture/list",
+      "style": {
+        "navigationBarTitleText": "制作列表"
+      }
+    },
+    {
+      "path": "pages/manufacture/detail",
+      "style": {
+        "navigationBarTitleText": "制作详情"
+      }
+    },
+    {
+      "path": "pages/inventory/list",
+      "style": {
+        "navigationBarTitleText": "库存列表"
+      }
+    },
+    {
+      "path": "pages/inventory/detail",
+      "style": {
+        "navigationBarTitleText": "库存详情"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  }
 }
