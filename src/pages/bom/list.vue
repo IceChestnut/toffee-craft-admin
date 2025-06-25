@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 
 interface BomItem {
   name: string
@@ -71,14 +72,14 @@ const deleteBom = (index: number) => {
   saveBoms()
 }
 
-onMounted(() => {
-  loadBoms()
+onMounted(async () => {
+  await loadBoms()
 })
 
-// 添加页面显示时的钩子
-uni.$on('onShow', () => {
-  loadBoms()
+onShow(async () => {
+  await loadBoms()
 })
+
 </script>
 
 <style scoped>

@@ -13,8 +13,8 @@
       <text class="section-title">材料列表</text>
       <view class="materials-container">
         <view class="material-item" v-for="(material, index) in bom.materials" :key="index">
-          <input v-model="material.name" class="form-input material-input" placeholder="材料名称" <uni-number-box
-            v-model="material.ratio" type="number" />
+          <input v-model="material.name" class="form-input material-input" placeholder="材料名称"/>
+          <uni-number-box v-model="material.ratio" />
           <text class="unit-text">g</text>
           <button class="delete-btn" @click="removeMaterial(index)">删除</button>
         </view>
