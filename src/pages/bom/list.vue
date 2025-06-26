@@ -13,11 +13,11 @@
     <view class="bom-list">
       <view class="bom-card" v-for="(item, index) in bomList" :key="index">
         <view class="bom-info">
-          <text class="bom-name">{{ item.name }}</text>
-          <text class="material-count">{{ item.materials.length }} 种材料</text>
+          <text class="bom-name">{{ item.product }}</text>
+          <text class="material-count">{{ item.materialUsage.length }} 种材料</text>
           <view class="materials-list">
-            <text class="material-item" v-for="(material, mIndex) in item.materials" :key="mIndex">
-              {{ material.name }}: {{ material.ratio }}g
+            <text class="material-item" v-for="(material, mIndex) in item.materialUsage" :key="mIndex">
+              {{ material.material.name }}: {{ material.usage }}{{ material.material.unit }}
             </text>
           </view>
         </view>
@@ -31,29 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
+import { useBOMStore } from '@/store'
 
-interface BomItem {
-  name: string
-  materials: { name: string, ratio: number }[]
-}
-
-const bomList = ref<BomItem[]>([])
-const BOM_STORAGE_KEY = 'bom_list'
-
-async function loadBoms() {
-  try {
-    const data = await uni.getStorage({ key: BOM_STORAGE_KEY });
-    if (data && data.data) {
-      bomList.value = JSON.parse(data.data);
-    }
-  } catch {}
-}
-
-const saveBoms = () => {
-  localStorage.setItem(BOM_STORAGE_KEY, JSON.stringify(bomList.value))
-}
+const bomStore = useBOMStore()
+const bomList = ref(bomStore.bomList)
 
 const addBom = () => {
   uni.navigateTo({
@@ -68,17 +50,8 @@ const editBom = (index: number) => {
 }
 
 const deleteBom = (index: number) => {
-  bomList.value.splice(index, 1)
-  saveBoms()
+  bomStore.delBOM(index)
 }
-
-onMounted(async () => {
-  await loadBoms()
-})
-
-onShow(async () => {
-  await loadBoms()
-})
 
 </script>
 

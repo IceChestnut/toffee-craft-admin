@@ -1,20 +1,20 @@
 <template>
   <view class="bom-detail-container">
     <view class="page-header">
-      <text class="page-title">{{ editIndex !== null ? '编辑配方' : '添加配方' }}</text>
+      <text class="page-title">{{ title }}</text>
     </view>
 
     <view class="bom-card">
       <view class="form-group">
-        <text class="form-label">配方名称</text>
-        <input v-model="bom.name" class="form-input" placeholder="请输入配方名称" />
+        <text class="form-label">产品名称</text>
+        <input v-model="bom.product" class="form-input" placeholder="请输入产品名称" />
       </view>
 
       <text class="section-title">材料列表</text>
       <view class="materials-container">
-        <view class="material-item" v-for="(material, index) in bom.materials" :key="index">
-          <input v-model="material.name" class="form-input material-input" placeholder="材料名称"/>
-          <uni-number-box v-model="material.ratio" />
+        <view class="material-item" v-for="(material, index) in bom?.materialUsage" :key="index">
+          <input v-model="material.material.name" class="form-input material-input" placeholder="材料名称"/>
+          <uni-number-box v-model="material.usage"/>
           <text class="unit-text">g</text>
           <button class="delete-btn" @click="removeMaterial(index)">删除</button>
         </view>
@@ -32,58 +32,75 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { type BOM, type Material, useBOMStore } from '@/store'
 
-interface Material {
-  name: string
-  ratio: number
-}
+const bomStore = useBOMStore()
 
-interface BomItem {
-  name: string
-  materials: Material[]
-}
-
-const bom = ref<BomItem>({
-  name: '',
-  materials: []
+const createBOM = ():BOM => ({
+  product: '',
+  materialUsage: [],
 })
-
-const editIndex = ref<number | null>(null)
-const BOM_STORAGE_KEY = 'bom_list'
-
-async function loadBoms() {
-  try {
-    const data = await uni.getStorage({ key: BOM_STORAGE_KEY })
-    return (data && data.data) ? JSON.parse(data.data) : []
-  } catch {
-    return [];
-  }
-}
+const originalBOM = ref<BOM>()
+const bom = ref<BOM>(createBOM())
+const title = ref('添加配方')
+let isEdit = false
+let index = -1
 
 const addMaterial = () => {
-  bom.value.materials.push({ name: '', ratio: 0 })
+  bom.value?.materialUsage.push({
+    material: {
+      name: '',
+      unit: 'g',
+    },
+    usage: 0,
+  })
 }
 
-const removeMaterial = (index: number) => {
-  bom.value.materials.splice(index, 1)
+function removeMaterial(index: number) {
+  bom.value?.materialUsage.splice(index, 1)
 }
 
 async function saveBom() {
-  const boms = await loadBoms()
-  if (editIndex.value !== null) {
-    boms[editIndex.value] = bom.value
-  } else {
-    boms.push(bom.value)
+  if (!bom.value) {
+    uni.showToast({
+      title: '配方不能为空',
+      icon: 'none',
+    })
+    return
   }
-  uni.setStorage({ key: BOM_STORAGE_KEY, data: JSON.stringify(boms) })
+  bom.value.product = bom.value.product.trim()
+  if (bom.value.product === '') {
+    uni.showToast({
+      title: '配方名称不能为空',
+      icon: 'none',
+    })
+    return
+  }
+  bom.value.materialUsage.forEach(material => {
+    material.material.name = material.material.name.trim()
+    if (material.material.name === '') {
+      uni.showToast({
+        title: '材料名称不能为空',
+        icon: 'none',
+      })
+      return
+    }
+  })
+  if (isEdit) {
+    bomStore.updateBOM(index, bom.value)
+  } else {
+    bomStore.addBOM(bom.value)
+  }
   uni.navigateBack()
 }
 
 onLoad(async (options) => {
   if (options?.index) {
-    editIndex.value = parseInt(options.index)
-    const boms = await loadBoms()
-    bom.value = JSON.parse(JSON.stringify(boms[editIndex.value]))
+    index = parseInt(options.index)
+    isEdit = true
+    title.value = '编辑配方'
+    originalBOM.value = bomStore.bomList[index]
+    bom.value = JSON.parse(JSON.stringify(originalBOM.value))
   }
 })
 </script>
